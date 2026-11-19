@@ -1,3 +1,4 @@
+import { Redirect } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -12,6 +13,12 @@ type Pattern = Record<(typeof TRACKS)[number], boolean[]>;
 
 /** One-screen beat pad: tap pads live, or loop a 16-step pattern. */
 export default function Beatpd() {
+  const [introSeen, , introReady] = useStoredState('intro-seen', false);
+  if (introReady && !introSeen) return <Redirect href="/intro" />;
+  return <Pads />;
+}
+
+function Pads() {
   const c = usePalette();
   const players = usePadPlayers();
   const [hit, setHit] = useState<string | null>(null);
